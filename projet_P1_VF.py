@@ -110,6 +110,7 @@ def somme_mantisse(a,b):
         else :
             retenue = False
             mantisse_finale.append(0)
+        compteur += 1
 #REGARDER BIAIS DE L4ESPOSANT SUR WIKIPEDIA POUR REPONDRE
 
 
