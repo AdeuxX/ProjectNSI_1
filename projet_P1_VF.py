@@ -83,6 +83,33 @@ def mantisse_en_binaire(n):
             return mantisse.ljust(23,"0")
     return mantisse
 
+def somme_mantisse(a,b):
+    retenue = False
+    compteur = 0
+    continuer = True
+    mantisse_finale =[]
+    while continuer == True:
+        if a[-(1-compteur)] == 0 and b[-(1-compteur)] == 1:
+            retenue = False
+            mantisse_finale.append(1)
+        elif  a[-(1-compteur)] == 1 and b[-(1-compteur)] == 0:
+            retenue = False
+            mantisse_finale.append(1)
+        elif a[-(1-compteur)] == 1 and b[-(1-compteur)] == 0:
+            retenue = True
+            mantisse_finale.append(0)
+        elif a[-(1-compteur)] == 0 and b[-(1-compteur)] == 0 and retenue == True:
+            retenue = False
+            mantisse_finale.append(1)
+        elif a[-(1-compteur)] == 1 and b[-(1-compteur)] == 0 and retenue == True:
+            retenue = True
+            mantisse_finale.append(0)
+        elif a[-(1-compteur)] == 0 and b[-(1-compteur)] == 1 and retenue == True:
+            retenue = True
+            mantisse_finale.append(0)
+        else :
+            retenue = False
+            mantisse_finale.append(0)
 #REGARDER BIAIS DE L4ESPOSANT SUR WIKIPEDIA POUR REPONDRE
 
 
