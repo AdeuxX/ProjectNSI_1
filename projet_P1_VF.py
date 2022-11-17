@@ -84,35 +84,52 @@ def mantisse_en_binaire(n):
     return mantisse
 
 def somme_mantisse(a,b):
-    retenue = False
+    retenue = 0
     compteur = 0
     continuer = True
     mantisse_finale =[]
     while continuer == True:
-        if a[-(1-compteur)] == 0 and b[-(1-compteur)] == 1:
-            retenue = False
+        if compteur == len(a):
+            continuer = False
+        if a[-(1-compteur)] == 0 and b[-(1-compteur)] == 1 and retenue == 0 : 
+            retenue = 0
             mantisse_finale.append(1)
-        elif  a[-(1-compteur)] == 1 and b[-(1-compteur)] == 0:
-            retenue = False
+        elif  a[-(1-compteur)] == 1 and b[-(1-compteur)] == 0 and retenue == 0:
+            retenue = 0
             mantisse_finale.append(1)
-        elif a[-(1-compteur)] == 1 and b[-(1-compteur)] == 0:
-            retenue = True
+        elif a[-(1-compteur)] == 1 and b[-(1-compteur)] == 0 and retenue == 1 :
+            retenue = 1
             mantisse_finale.append(0)
-        elif a[-(1-compteur)] == 0 and b[-(1-compteur)] == 0 and retenue == True:
-            retenue = False
+        elif a[-(1-compteur)] == 0 and b[-(1-compteur)] == 0 and retenue == 1:
+            retenue = 0
             mantisse_finale.append(1)
-        elif a[-(1-compteur)] == 1 and b[-(1-compteur)] == 0 and retenue == True:
-            retenue = True
+        elif a[-(1-compteur)] == 0 and b[-(1-compteur)] == 1 and retenue == 1:
+            retenue = 1
             mantisse_finale.append(0)
-        elif a[-(1-compteur)] == 0 and b[-(1-compteur)] == 1 and retenue == True:
-            retenue = True
+        elif a[-(1-compteur)] == 1 and b[-(1-compteur)] == 1 and retenue == 0:
+            retenue = 1
             mantisse_finale.append(0)
+        elif a[-(1-compteur)] == 1 and b[-(1-compteur)] == 1 and retenue == 1:
+            retenue = 1
+            mantisse_finale.append(1)
         else :
             retenue = False
             mantisse_finale.append(0)
-        compteur += 1
+        compteur -= 1
+        print(mantisse_finale)
+    return mantisse_en_binaire.reverse()
 #REGARDER BIAIS DE L4ESPOSANT SUR WIKIPEDIA POUR REPONDRE
+def exposant_sup(exp1,exp2):
 
+    for i in range(0,len(exp1)):
+
+        if int(exp1[i]) > int(exp2[i]):
+
+            return (1)
+
+        if int(exp1[i]) < int(exp2[i]):
+
+            return (-1)
 
 
 print(norme_IEEE(13.5))
