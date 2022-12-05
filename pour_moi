@@ -1,5 +1,6 @@
 def difference_exposant(exp_a,exp_b,wich_supp):
     compteur = 0
+    compteur_final = 0
     retenue = 0
     if wich_supp == 0:
         return 0
@@ -10,33 +11,35 @@ def difference_exposant(exp_a,exp_b,wich_supp):
         exposant_a_modif = exp_b
         condition = exp_a
     while exposant_a_modif != condition :
-        liste_1 = [1 for i in range(0,-compteur)]
-        if exposant_a_modif[-1:-compteur] == liste_1:
-            exposant_a_modif
-        if exposant_a_modif[-(1-compteur)]== 1  and exposant_a_modif[-(2-compteur)]== 0:
-            exposant_a_modif[-(1-compteur)]=0
-            exposant_a_modif[-(2-compteur)]=1 
+        liste_1 = [1 for i in range(0,1+compteur)]
+        a = list(reversed(exposant_a_modif))[0:1+compteur]
+        if a == liste_1:
+            exposant_a_modif[-(2+compteur)] = 1
+            for i in range (0,compteur+1):
+                compteur_final +=1
+                exposant_a_modif[-(1+i)] = 0
+            compteur = 0
+        elif exposant_a_modif[-(1+compteur)]== 1 :
+            exposant_a_modif[-(1+compteur)]=0
+            exposant_a_modif[-(2+compteur)]=1 
             compteur+= 1
 
 ###########################################################################################   
-        elif exposant_a_modif[-(1-compteur)]== 0  and exposant_a_modif[-(2-compteur)]== 0:
-            exposant_a_modif[-(1-compteur)] = 1
+        elif exposant_a_modif[-(1+compteur)]== 0  and exposant_a_modif[-(2-compteur)]== 0:
+            exposant_a_modif[-(1+compteur)] = 1
+            compteur += 1
+###########################################################################################
+        elif exposant_a_modif[-(1+compteur)] == 1  and exposant_a_modif[-(2-compteur)]== 1:
+            exposant_a_modif[-(1+compteur)] = 1
+            compteur += 1
+###########################################################################################
+        elif exposant_a_modif[-(1+compteur)] == 0  and exposant_a_modif[-(2-compteur)]== 1:
+            exposant_a_modif[-(1+compteur)] = 1
+            compteur += 1
 
 ###########################################################################################
-        elif exposant_a_modif[-(1-compteur)] == 1  and exposant_a_modif[-(2-compteur)]== 1:
-            exposant_a_modif[-(1-compteur)] = 1
-
-###########################################################################################
-        elif exposant_a_modif[-(1-compteur)] == 0  and exposant_a_modif[-(2-compteur)]== 1:
-            exposant_a_modif[-(1-compteur)] = 1
-
-###########################################################################################
-        compteur -= 1
+        compteur_final +=1
         print(exposant_a_modif)
-    return compteur
+    return compteur_final-1
 
-#print(difference_exposant([1,0,0,0,1],[1,1,1,1,1],1))
-
-liste_1 = [1 for i in range(0,19)]
-liste_1[-1:-5] 
-print(liste_1 , "o", len(liste_1))
+print(difference_exposant([1,1,1,1,1,0,1],[0,0,0,0,0,0,1],-1))
