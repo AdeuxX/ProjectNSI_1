@@ -1,0 +1,22 @@
+tranches11 = ([0,10000,[0]],[10000,25000,[0.11]],[25000,75000,[0.30]],[75000,150000,[0.41]],[150000,float("inf"),[0.45]])
+tranches1 = ([0,10000,[0,0]],[10000,25000,[0,0.11]],[25000,75000,[1650,0.30]],[75000,150000,[1650+15000,0.41]],[150000,float("inf"),[1650+15000+30750,0.45]])
+def calcul(salaire):
+    impots = 0
+    for a in tranches1:
+        if salaire >= a[0] and salaire < a[1]:
+            salaire_ipmose_au_max = salaire - a[0]
+            impots = a[2][0] + (salaire_ipmose_au_max*a[2][1])
+            return impots
+tx,ty = [],[]
+for u in range (0,2001000,5000):
+    p = calcul(u)
+    if p != 0:
+        i = p/u *100
+    else:
+        i = 0
+    ty.append(i)
+    tx.append(u)
+print(ty)
+plot(tx, ty)
+show()
+print(calcul(1000000))
