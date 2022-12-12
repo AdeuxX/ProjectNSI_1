@@ -91,9 +91,13 @@ def somme_mantisse(a,b):#addition
     mantisse_finale =[]
     while continuer == True:
         
-        if compteur == 23:
-            continuer = False
-        
+        if compteur == 24 :
+            # if retenue == 1:
+            #     mantisse_finale.append(1)
+            #     mantisse_finale.pop(0)
+            break
+        tatata = a[-(1+compteur)]
+        bababa = b[-(1+compteur)]
         if a[-(1+compteur)] == "0" and b[-(1+compteur)] == "1" and retenue == 0 :
             retenue = 0
             mantisse_finale.append(1)
@@ -103,7 +107,7 @@ def somme_mantisse(a,b):#addition
         elif a[-(1+compteur)] == "1" and b[-(1+compteur)] == "0" and retenue == 1 :
             retenue = 1
             mantisse_finale.append(0)
-        elif a[-(1+compteur)] == 0 and b[-(1+compteur)] == 0 and retenue == 1:
+        elif a[-(1+compteur)] == "0" and b[-(1+compteur)] == "0" and retenue == 1:
             retenue = 0
             mantisse_finale.append(1)
         elif a[-(1+compteur)] == "0" and b[-(1+compteur)] == "1" and retenue == 1:
@@ -158,29 +162,30 @@ def difference_exposant(exp_a,exp_b,wich_supp):
     return compteur
 
 def mantisse_a_additioner(compteur,mantisse):
-    return "0"*compteur+mantisse
+    return "0"*compteur+mantisse[:-compteur]
 
 def somme_IEEE(n1,n2):#utilise toute les fonctions d'avants pour faire la somme des 2 nombres
+    #a une grosse
 
     final=[]
 
     final.append(bit_de_signe(n1))
     if exposant_sup(exposant_en_binaire(n1),exposant_en_binaire(n2))==1:
         final.append(exposant_en_binaire(n1))
-        mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),-1),mantisse_en_binaire(mantisse_en_decimal(n1)))'''ANTOINE REGARDE CA'''
-        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal(n2))'''ANTOINE REGARDE CA'''
+        mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),-1),mantisse_en_binaire(mantisse_en_decimal(n2)))
+        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal(n1)) 
     elif exposant_sup(exposant_en_binaire(n1),exposant_en_binaire(n2))==-1:
-        final.append(exposant_en_binaire(n2))'''ANTOINE REGARDE CA'''
-        mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),1),mantisse_en_binaire(mantisse_en_decimal(n2)))'''ANTOINE REGARDE CA'''
-        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal(n1))
+        final.append(exposant_en_binaire(n2)) 
+        mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),1),mantisse_en_binaire(mantisse_en_decimal(n1))) 
+        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal(n2))
 
-    elif exposant_en_decimal(n1)==exposant_en_decimal(n2):'''ANTOINE REGARDE CA'''
-        mantisse_1 = mantisse_en_binaire(n1)'''ANTOINE REGARDE CA'''
-        mantisse_2 = mantisse_en_binaire(n2) '''ANTOINE REGARDE CA'''
+    elif exposant_en_decimal(n1)==exposant_en_decimal(n2): 
+        mantisse_1 = mantisse_en_binaire(mantisse_en_decimal(n1))
+        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal(n2))
         final.append(convertisseur_decimal_a_binaire(exposant_biaisé_en_décimal(n1)+1))
 
     
-    final.append(somme_mantisse(mantisse_1,mantisse_2))'''ANTOINE REGARDE CA'''
+    final.append(somme_mantisse(mantisse_1,mantisse_2)) 
     #final.append(mantisse_1,mantisse_2)
 
  
@@ -189,11 +194,12 @@ def somme_IEEE(n1,n2):#utilise toute les fonctions d'avants pour faire la somme 
 
     #final+=somme_mantisse(n1,n2)
 
-#print(norme_IEEE(13.5))
+
 #print(exposant_biaisé_en_décimal(2))
 #print(somme_mantisse("0010","1100"))
 #print(somme_mantisse("001000000000000000000000","110000000000000000000000"))
-#print(mantisse_en_binaire(mantisse_en_decimal(2)))
-print(somme_IEEE(2,12))
+#print(mantisse_en_binaire(mantisse_en_decimal(2.5)))
+print(somme_IEEE(854.85475,478.47512))
+print("       ",norme_IEEE(854.85475))
 # print(mantisse_en_decimal(12))
 # print(exposant_en_decimal(12))
