@@ -47,27 +47,16 @@ def convertisseur_decimal_a_binaire(nbr):# transforme un nombre decimal en binai
     for i in liste:
         string = string + str(i)
     return string
- 
-def exposant_en_decimal_Antoine(n):#exposant en décimal sans biais de l'esposant que j'utilise ppour la somme
+
+def exposant_en_decimal(n):#exposant en décimal sans biais de l'esposant que j'utilise ppour la somme
     exposant=0
     n=abs(n)
     while n/(2**exposant)>=1:
         if n>=1:
             exposant+=1
         else:
-            exposant=exposant-1
+            exposant-=1
     return exposant-1
-
-def exposant_en_decimal(n): #exposant en décimal + 1
-    exposant=0
-    n=abs(n)
-
-    while n/(2**exposant)>=1:
-        if n>=1:
-            exposant+=1
-        else:
-            exposant=exposant-1
-    return exposant
 
 def exposant_biaisé_en_décimal(n): 
     return exposant_en_decimal(n)-(2**(8-1))-1
@@ -77,9 +66,6 @@ def exposant_en_binaire(n):
  
 def mantisse_en_decimal(n):#divise le nombre par 2puissance l'esxposant 
    return n/(2**exposant_en_decimal(n))
-
-def mantisse_en_decimal_Antoine(n):
-   return n/(2**exposant_en_decimal_Antoine(n))
 
 def mantisse_en_binaire(n):#transforme la mantisse de décimal a binaire
     mantisse = "1"
@@ -137,7 +123,7 @@ def somme_mantisse(a,b):#addition
     mantisse_finale_str = ''.join([str(i) for i in mantisse_finale ]) 
     return mantisse_finale_str
 
-def exposant_sup(exp1,exp2):
+def exposant_sup(exp1,exp2):#determine l'exposant supérieur à l'autre (peut s'implement etre remplacer par "exposant_en_decimal(n1) ( > ou < ) exposant_en_decimal(n2)" mais bon)
     for i in range(0,len(exp1)):
         if int(exp1[i]) > int(exp2[i]):
             return (1)
@@ -179,35 +165,31 @@ def somme_IEEE(n1,n2):#utilise toute les fonctions d'avants pour faire la somme 
     final=[]
 
     final.append(bit_de_signe(n1))
-
     if exposant_sup(exposant_en_binaire(n1),exposant_en_binaire(n2))==1:
         final.append(exposant_en_binaire(n1))
-        mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),-1),mantisse_en_binaire(mantisse_en_decimal_Antoine(n1)))
-        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal_Antoine(n2))
+        mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),-1),mantisse_en_binaire(mantisse_en_decimal(n1)))'''ANTOINE REGARDE CA'''
+        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal(n2))'''ANTOINE REGARDE CA'''
     elif exposant_sup(exposant_en_binaire(n1),exposant_en_binaire(n2))==-1:
-        final.append(exposant_en_binaire(n2))
-        mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),1),mantisse_en_binaire(mantisse_en_decimal_Antoine(n2)))
-        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal_Antoine(n1))
+        final.append(exposant_en_binaire(n2))'''ANTOINE REGARDE CA'''
+        mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),1),mantisse_en_binaire(mantisse_en_decimal(n2)))'''ANTOINE REGARDE CA'''
+        mantisse_2 = mantisse_en_binaire(mantisse_en_decimal(n1))
 
+    elif exposant_en_decimal(n1)==exposant_en_decimal(n2):'''ANTOINE REGARDE CA'''
+        mantisse_1 = mantisse_en_binaire(n1)'''ANTOINE REGARDE CA'''
+        mantisse_2 = mantisse_en_binaire(n2) '''ANTOINE REGARDE CA'''
+        final.append(convertisseur_decimal_a_binaire(exposant_biaisé_en_décimal(n1)+1))
 
-    elif exposant_sup(exposant_en_binaire(n1),exposant_en_binaire(n2))==0:
-        mantisse_1 = mantisse_en_binaire(n1)
-        mantisse_2 = mantisse_en_binaire(n2) 
-        final.append(exposant_en_binaire(n1))
     
-    final.append(somme_mantisse(mantisse_1,mantisse_2))
+    final.append(somme_mantisse(mantisse_1,mantisse_2))'''ANTOINE REGARDE CA'''
     #final.append(mantisse_1,mantisse_2)
 
  
 
-    return(final)
+    return final
 
     #final+=somme_mantisse(n1,n2)
 
 #print(norme_IEEE(13.5))
-
- 
-
 #print(exposant_biaisé_en_décimal(2))
 #print(somme_mantisse("0010","1100"))
 #print(somme_mantisse("001000000000000000000000","110000000000000000000000"))
