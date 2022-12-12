@@ -136,9 +136,9 @@ def ajouter_un(mantisse_a_ajouter):
   for i in range(len(mantisse_a_ajouter_list)):
     nbr += int(mantisse_a_ajouter_list[i]) * (2 ** (len(mantisse_a_ajouter_list) - i - 1))
   nbr += 1
-  mantisse_a_return = ""
+  binary_number = ""
   while nbr > 0:
-    binary_number = str(nbr % 2) + mantisse_a_return
+    binary_number = str(nbr % 2) + binary_number
     nbr //= 2
   return binary_number
 
