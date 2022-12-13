@@ -83,6 +83,7 @@ def mantisse_en_binaire(n):#transforme la mantisse de décimal a binaire
     return mantisse
  
 def somme_mantisse(a,b):#addition
+    b = b+("0"*(len(a)-len(b)))
     a = list(a.strip())
     b = list(b.strip())
     retenue = 0
@@ -91,7 +92,7 @@ def somme_mantisse(a,b):#addition
     mantisse_finale =[]
     while continuer == True:
         
-        if compteur == 24 :
+        if compteur == len(b) :
             # if retenue == 1:
             #     mantisse_finale.append(1)
             #     mantisse_finale.pop(0)
@@ -125,7 +126,7 @@ def somme_mantisse(a,b):#addition
         compteur += 1
     mantisse_finale.reverse() 
     mantisse_finale_str = ''.join([str(i) for i in mantisse_finale ]) 
-    return mantisse_finale_str
+    return mantisse_finale_str[0:24]
 
 def exposant_sup(exp1,exp2):#determine l'exposant supérieur à l'autre (peut s'implement etre remplacer par "exposant_en_decimal(n1) ( > ou < ) exposant_en_decimal(n2)" mais bon)
     for i in range(0,len(exp1)):
@@ -162,7 +163,8 @@ def difference_exposant(exp_a,exp_b,wich_supp):
     return compteur
 
 def mantisse_a_additioner(compteur,mantisse):
-    return "0"*compteur+mantisse[:-compteur]
+    #return "0"*compteur+mantisse[:-compteur]
+    return "0"*compteur+mantisse
 
 def somme_IEEE(n1,n2):#utilise toute les fonctions d'avants pour faire la somme des 2 nombres
     #a une grosse
@@ -199,7 +201,7 @@ def somme_IEEE(n1,n2):#utilise toute les fonctions d'avants pour faire la somme 
 #print(somme_mantisse("0010","1100"))
 #print(somme_mantisse("001000000000000000000000","110000000000000000000000"))
 #print(mantisse_en_binaire(mantisse_en_decimal(2.5)))
-print(somme_IEEE(854.85475,478.47512))
-print("       ",norme_IEEE(854.85475))
+print(somme_IEEE(17235352.23362,1.126345 ))
+print("       ",norme_IEEE(17235353.359965))
 # print(mantisse_en_decimal(12))
 # print(exposant_en_decimal(12))
