@@ -171,7 +171,10 @@ def somme_IEEE(n1,n2):#utilise toute les fonctions d'avants pour faire la somme 
 
     final=[]
 
-    final.append(bit_de_signe(n1))
+    if n1 >= n2:
+        final.append(bit_de_signe(n1))
+    else: 
+        final.append(bit_de_signe(n2))
     if exposant_sup(exposant_en_binaire(n1),exposant_en_binaire(n2))==1:
         final.append(exposant_en_binaire(n1))
         mantisse_1 = mantisse_a_additioner(difference_exposant(exposant_en_binaire(n1),exposant_en_binaire(n2),-1),mantisse_en_binaire(mantisse_en_decimal(n2)))
