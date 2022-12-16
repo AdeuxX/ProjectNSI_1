@@ -1,0 +1,116 @@
+def convertisseur_decimal_a_binaire(nbr):# transforme un nombre decimal en binaire pas dans le format ieee 754
+    liste = []
+    base=2
+    if nbr >= 0 :
+        positif = True
+    else:
+        positif = False
+        nbr = nbr * -1
+    for i in range (0,8) :
+        liste.append(nbr%base)
+        nbr = nbr//base
+    liste.reverse()
+    if positif == False :
+        for u in range (0,len(liste)):
+            if liste[u] == 1:
+                liste[u] = liste[u]-1
+            else :
+                liste[u] = liste[u] + 1
+        if liste[7] == 0:
+            liste[7] = 1
+
+        else:
+            continuer = True
+            compteur = 0
+            while continuer == True :
+                if liste[7 - compteur] == 1 :
+                    liste[7 - compteur] = 0
+                else :
+                    liste[7 - compteur] = 1
+                    continuer = False
+                compteur  = compteur +1
+    string=""
+    for i in liste:
+        string = string + str(i)
+    return string
+
+def conversion(n):
+    string=''
+    while n!=0:
+        string= str(n%2)+string
+        n=n//2
+    return string
+# Python program to convert a real value
+# to IEEE 754 Floating Point Representation.
+ 
+# Function to convert a
+# x to string form.
+def convertisseur_virgule_decimale_vers_binaire(x):
+    string=""
+    while x != 0:
+        x = x*2
+        if x >= 1:
+            x -= 1
+            string += "1"
+        else:
+            string = "0"
+    return string
+ 
+# Function to get sign  bit,
+# exp bits and mantissa bits,
+# from given real no.
+def floatingPoint(n):
+    sign_bit = 0
+    if n<0:
+        sign_bit = 1
+        
+    n=abs(n)
+
+    p_entiere_n = conversion(int(n))
+
+    p_virgule_n = convertisseur_virgule_decimale_vers_binaire(n - int(n))
+ 
+    # Getting the index where
+    # Bit was high for the first
+    # Time in binaryz repres
+    # of Integer part of real no.
+    ind = p_entiere_n.index('1')
+ 
+    # The Exponent is the no.
+    # By which we have right
+    # Shifted the decimal and
+    # it is given below.
+    # Also converting it to bias
+    # exp by adding 127.
+    exp_str = bin((len(p_entiere_n) - ind - 1) + 127)[2 : ]
+ 
+    # getting mantissa string
+    # By adding p_entiere_n and p_virgule_n.
+    # the zeroes in MSB of p_entiere_n
+    # have no significance so they
+    # are ignored by slicing.
+    mant_str = p_entiere_n[ind + 1 : ] + p_virgule_n
+ 
+    # Adding Zeroes in LSB of
+    # mantissa string so as to make
+    # it's length of 23 bits.
+    mant_str = mant_str + ('0' * (23 - len(mant_str)))
+ 
+    # Returning the sign, Exp
+    # and Mantissa Bit strings.
+    return sign_bit, exp_str, mant_str
+ 
+# Driver Code
+if __name__ == "__main__":
+ 
+    # Function call to get
+    # Sign, Exponent and
+    # Mantissa Bit Strings.
+    sign_bit, exp_str, mant_str = floatingPoint(23)
+ 
+    # Final Floating point Representation.
+    ieee_32 = str(sign_bit) + '|' + exp_str + '|' + mant_str
+ 
+    # Printing the ieee 32 representation.
+    print("IEEE 754 representation of -2.250000 is :")
+    print(ieee_32)
