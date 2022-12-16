@@ -114,3 +114,7 @@ if __name__ == "__main__":
     # Printing the ieee 32 representation.
     print("IEEE 754 representation of -2.250000 is :")
     print(ieee_32)
+    
+https://chat.openai.com/auth/login
+https://www.h-schmidt.net/FloatConverter/IEEE754.html
+https://www.h-schmidt.net/FloatConverter/IEEE754.html
