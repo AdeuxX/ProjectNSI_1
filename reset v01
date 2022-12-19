@@ -1,120 +1,158 @@
-def convertisseur_decimal_a_binaire(nbr):# transforme un nombre decimal en binaire pas dans le format ieee 754
-    liste = []
-    base=2
-    if nbr >= 0 :
-        positif = True
-    else:
-        positif = False
-        nbr = nbr * -1
-    for i in range (0,8) :
-        liste.append(nbr%base)
-        nbr = nbr//base
-    liste.reverse()
-    if positif == False :
-        for u in range (0,len(liste)):
-            if liste[u] == 1:
-                liste[u] = liste[u]-1
-            else :
-                liste[u] = liste[u] + 1
-        if liste[7] == 0:
-            liste[7] = 1
-
-        else:
-            continuer = True
-            compteur = 0
-            while continuer == True :
-                if liste[7 - compteur] == 1 :
-                    liste[7 - compteur] = 0
-                else :
-                    liste[7 - compteur] = 1
-                    continuer = False
-                compteur  = compteur +1
-    string=""
-    for i in liste:
-        string = string + str(i)
-    return string
-
-def conversion(n):
+def decimal_vers_binaire(n): #transforme en entier en base 10 en un string en base 2
     string=''
     while n!=0:
-        string= str(n%2)+string
+        string=str(n%2)+string
         n=n//2
     return string
-# Python program to convert a real value
-# to IEEE 754 Floating Point Representation.
- 
-# Function to convert a
-# x to string form.
-def convertisseur_virgule_decimale_vers_binaire(x):
+
+def convertisseur_virgule_decimale_vers_binaire(v): #converti la partie décimale (après la virgule) en binaire
     string=""
-    while x != 0:
-        x = x*2
-        if x >= 1:
-            x -= 1
-            string += "1"
-        else:
-            string = "0"
+    while v!=0:
+        v=2*v
+        string+=str(int(v))
+        v=v%1
     return string
- 
-# Function to get sign  bit,
-# exp bits and mantissa bits,
-# from given real no.
-def floatingPoint(n):
-    sign_bit = 0
+
+def binaire_vers_decimal(n): #transforme un string en base 2 en un entier en base 10
+    final=0
+    ln=[]
+    for i in n:
+        ln.append(i)
+    ln.reverse()
+    c=0
+    for i in ln:
+        final+=int(i)*2**c
+        c+=1
+    return final
+
+def addition_binaire_simple(n1,n2): #fait l'addition de deux nombres binaires sans passer par leurs formes décimale
+    if len(n1)>len(n2):
+        n2="0"*(len(n1)-len(n2))+n2
+    elif len(n1)<len(n2):
+        n1="0"*(len(n2)-len(n1))+n1
+    string="0"
+    r="0"
+    for i in range(len(n1)-1,-1,-1):
+        somme=int(n1[i])+int(n2[i])+int(r)
+        if somme in [0,1]:
+            string=str(somme)+string
+            r="0"
+        elif somme==2:
+            string="0"+string
+            r="1"
+        elif somme==3:
+            string="1"+string
+            r="1"
+    if r=="1":
+        string="1"+string
+    return string
+
+def soustraction_binaire_simple(n1,n2): #fait la soustraction de deux nombres binaires sans passer par leurs formes décimale
+    if len(n1)>len(n2):
+        n2="0"*(len(n1)-len(n2))+n2
+    elif len(n1)<len(n2):
+        n1="0"*(len(n2)-len(n1))+n1
+    string=""
+    r="0"
+    for i in range(len(n1)-1,-1,-1):
+        diff=int(n1[i])-int(n2[i])-int(r)
+        if diff==0:
+            string="0"+string
+            r="0"
+        elif diff==1:
+            string="1"+string
+            r="0"
+        elif diff==-1:
+            string="1"+string
+            r="1"
+        elif diff==-2:
+            string="0"+string
+            r="1"
+    if string=="":
+        string="0"
+    return string
+
+def norme_iEEE(n): #transorme un nombre décimale en un bit de signe, un exposant et une mantisse, le tout en binaire
+    if n==0:
+        return "0","00000000","00000000000000000000000"
+    bit_de_signe="0"
     if n<0:
-        sign_bit = 1
-        
-    n=abs(n)
+        bit_de_signe="1"
+    n=abs(n) #valeur absolue de n
+    p_entiere_n=decimal_vers_binaire(int(n)) #partie avant la virgule
+    p_virgule_n=convertisseur_virgule_decimale_vers_binaire(n%1) #partie décimale ou après la virgule
+    mantisse=p_entiere_n+p_virgule_n
+    exposant=len(p_entiere_n)-1
+    i=0
+    while mantisse[i]!="1": #calcul du décalage nécessaire si n<1 et donc que l'exposant est négatif
+        exposant-=1
+        i+=1
+    mantisse=mantisse[i:23+i] #transormation de la mantisse après son décalage
+    exposant_binaire=decimal_vers_binaire(exposant+127) #passage de l'exposant en binaire et avec un biais de +127
+    while len(exposant_binaire)!=8: #ajout de 0 devant l'exposant s'il est négatif et donc pas en 8bits
+        exposant_binaire="0"+exposant_binaire
+    return bit_de_signe,exposant_binaire[:8],(mantisse+23*"0")[1:24] #ajout de quelques 0 si la mantisse n'est pas complète
 
-    p_entiere_n = conversion(int(n))
+def somme_iEEE(g,p):
+    if abs(p)>abs(g): #si p>g en valeur absolue, alors p prend la place de g et inversement
+        g1=p
+        p1=g
+        g=g1
+        p=p1
+    grand=norme_iEEE(g) #passage en iEEE de g et p
+    petit=norme_iEEE(p)
+    if p==0:
+        return grand
+    if (grand[0]=="1" and petit[0]=="1") or (grand[0]=="0" and petit[0]=="0"): #si p et g ont le meme signe (addition)
+        if grand[0]=="1": #choix du bit de signe, l'addition de deux nombres positif est un nombre positif, relire la phrase avec négatif
+            bit_de_signe="1"
+        elif grand[0]=="0":
+            bit_de_signe="0"
+        if grand[1]>petit[1]: #si g et p ont un exposant different, decalage de la mantisse de p pour l'avoir avec le meme exposant que g
+            decalage=binaire_vers_decimal(soustraction_binaire_simple(grand[1],petit[1]))#calcul du décalage a mettre pour la mantisse de p
+            mantisse_a_additioner=((decalage-1)*"0"+"1"+petit[2])[:23]#decalage de la mantisse de p
+            mantisse=addition_binaire_simple(grand[2],mantisse_a_additioner)#addition des 2 mantisse lorsque'elles sont sous le meme exposant
+            exposant=grand[1]#l'exposant final correspond a celui de g
+            if mantisse=="1000000000000000000000000":#si la mantisse est de 1, alors la mantisse sans le 1 inplicite est retiré et l'exposant+=1
+                    mantisse="00000000000000000000000"
+                    exposant=addition_binaire_simple(exposant,"1")[:8]
+        if grand[1]==petit[1]:#si les exposants sont égaux
+            exposant=addition_binaire_simple(grand[1],"1")[:8]
+            mantisse=addition_binaire_simple("1"+grand[2],"1"+petit[2])[1:24]
+            if mantisse=="1000000000000000000000000":#si la mantisse est de 1, alors la mantisse sans le 1 inplicite est retiré et l'exposant+=1
+                    mantisse="00000000000000000000000"
+                    exposant=addition_binaire_simple(exposant,"1")[:8]
+    else:#si p et g ont un signe different (soustraction)
+        if abs(p)==abs(g):#si g-p=0
+            return "0","00000000","00000000000000000000000"
+        bit_de_signe="0"
+        if p>0:#si p est positif alors g<0 et donc g-p <0 car g>p en valeur absloue
+            bit_de_signe="1"
+        if g==p:
+            return norme_iEEE(0)
+        if grand[1]==petit[1]:#si p et g ont le meme exposant
+            mantisse=soustraction_binaire_simple("1"+grand[2],"1"+petit[2])#sommes des deux mantisses déja au meme exposant
+            decalage_e=0
+            z=0
+            while mantisse[z]=="0":#calcul du décalage de la mantisse et de l'exposant apres soustraction
+                decalage_e+=1
+                z+=1
+            mantisse=mantisse[z+1:]#décalage de la mantisse
+            exposant=soustraction_binaire_simple(grand[1],decimal_vers_binaire(decalage_e))#calcul de l'exposant après décalage
+        else:#si p et g n'ont pas le meme exposant
+            decalage=binaire_vers_decimal(soustraction_binaire_simple(grand[1],petit[1]))#calcul du decalage de la mantisse
+            mantisse_a_soustraire=((decalage-1)*"0"+"1"+petit[2])[:23]#decalage de la mantisse
+            mantisse=soustraction_binaire_simple("1"+grand[2],mantisse_a_soustraire)#soustraction des mantisses sous le meme exposant
+            decalage_e=0
+            z=0
+            while mantisse[z]=="0":#calcul du décalage de l'exposant et de la mantisse après soustraction
+                decalage_e+=1
+                z+=1
+            mantisse=mantisse[z+1:]#decalage de la mantisse finale
+            exposant=soustraction_binaire_simple(grand[1],decimal_vers_binaire(decalage_e))#calcul de l'exposant après décalage
+    return bit_de_signe,(exposant+8*"0")[:8],(mantisse+23*"0")[:23] #retour du bit de signe, de l'exposant et de la mantisse
 
-    p_virgule_n = convertisseur_virgule_decimale_vers_binaire(n - int(n))
- 
-    # Getting the index where
-    # Bit was high for the first
-    # Time in binaryz repres
-    # of Integer part of real no.
-    ind = p_entiere_n.index('1')
- 
-    # The Exponent is the no.
-    # By which we have right
-    # Shifted the decimal and
-    # it is given below.
-    # Also converting it to bias
-    # exp by adding 127.
-    exp_str = bin((len(p_entiere_n) - ind - 1) + 127)[2 : ]
- 
-    # getting mantissa string
-    # By adding p_entiere_n and p_virgule_n.
-    # the zeroes in MSB of p_entiere_n
-    # have no significance so they
-    # are ignored by slicing.
-    mant_str = p_entiere_n[ind + 1 : ] + p_virgule_n
- 
-    # Adding Zeroes in LSB of
-    # mantissa string so as to make
-    # it's length of 23 bits.
-    mant_str = mant_str + ('0' * (23 - len(mant_str)))
- 
-    # Returning the sign, Exp
-    # and Mantissa Bit strings.
-    return sign_bit, exp_str, mant_str
- 
-# Driver Code
-if __name__ == "__main__":
- 
-    # Function call to get
-    # Sign, Exponent and
-    # Mantissa Bit Strings.
-    sign_bit, exp_str, mant_str = floatingPoint(23)
- 
-    # Final Floating point Representation.
-    ieee_32 = str(sign_bit) + '|' + exp_str + '|' + mant_str
- 
-    # Printing the ieee 32 representation.
-    print("IEEE 754 representation of -2.250000 is :")
-    print(ieee_32)
-    
-https://chat.openai.com/auth/login
-https://www.h-schmidt.net/FloatConverter/IEEE754.html
-https://www.h-schmidt.net/FloatConverter/IEEE754.html
+i=
+j=
+print(i+j,norme_iEEE(i+j))
+print(i+j,somme_iEEE(i,j))
